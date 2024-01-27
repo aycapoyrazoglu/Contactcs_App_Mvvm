@@ -3,8 +3,12 @@ package com.aycap.kisileruygulamasimvvm.data.repo
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.aycap.kisileruygulamasimvvm.data.entity.Persons
+import com.aycap.kisileruygulamasimvvm.room.PersonsDao
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class PersonsDaoRepository {
+class PersonsDaoRepository(var pdao:PersonsDao) {
 
     var personsList : MutableLiveData<List<Persons>>
     init {
@@ -38,16 +42,8 @@ class PersonsDaoRepository {
 
     fun allPersonShow()
     {
-        val list = ArrayList<Persons>()
-        val k1 = Persons(1,"Ayca","11111")
-        val k2 = Persons(2,"Aycax","22222")
-        val k3 = Persons(3,"Sahin","33333")
-        val k4 = Persons(4,"Zeytin","44444")
-        list.add(k1)
-        list.add(k2)
-        list.add(k3)
-        list.add(k4)
-
-        personsList.value = list
+        val job = CoroutineScope(Dispatchers.Main).launch {
+            personsList.value = pdao.allPeople()
+        }
     }
 }
