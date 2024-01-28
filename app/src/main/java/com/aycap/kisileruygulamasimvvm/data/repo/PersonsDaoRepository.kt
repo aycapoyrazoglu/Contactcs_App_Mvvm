@@ -22,22 +22,35 @@ class PersonsDaoRepository(var pdao:PersonsDao) {
 
     fun addPerson(person_name:String,person_num:String)
     {
-        Log.e("Person Add : ", "$person_name - $person_num")
+        val job = CoroutineScope(Dispatchers.Main).launch {
+            val newPerson = Persons(0,person_name,person_num)
+            pdao.addPerson(newPerson)
+        }
     }
 
     fun updatePerson(person_id:Int,person_name:String,person_num:String)
     {
-        Log.e("Person Update:" , "$person_id - $person_name - $person_num")
+        val job = CoroutineScope(Dispatchers.Main).launch {
+            val updatedPerson = Persons(person_id,person_name,person_num)
+            pdao.updatePerson(updatedPerson)
+        }
     }
 
     fun searchPerson(searchWord:String)
     {
-        Log.e("Kişi Ara",searchWord)
+        val job = CoroutineScope(Dispatchers.Main).launch {
+            personsList.value = pdao.searchPeople(searchWord)
+        }
+
     }
 
     fun deletePerson(person_id:Int)
     {
-        Log.e("Kişi Sil",person_id.toString())
+        val job = CoroutineScope(Dispatchers.Main).launch {
+            val deletedPerson = Persons(person_id,"","")
+            pdao.deletePerson(deletedPerson)
+            allPersonShow()
+        }
     }
 
     fun allPersonShow()
